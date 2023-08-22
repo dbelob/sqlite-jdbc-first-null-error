@@ -50,9 +50,10 @@ class JdbcTemplateTest {
     }
 
     @Test
-    void updateWithFirstNotNull() {
+    void updateWithoutNulls() {
         // Successfully in any SQLite JDBC version
         int count = jdbcTemplate.update("update test_table set first_field = ?, second_field = ?", 2, "text 2");
+
         assertEquals(1, count);
     }
 
@@ -60,6 +61,15 @@ class JdbcTemplateTest {
     void updateWithFirstNull() {
         // NullPointerException since SQLite JDBC 3.41.2.2
         int count = jdbcTemplate.update("update test_table set first_field = ?, second_field = ?", null, "text 2");
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    void updateWithSecondNull() {
+        // Successfully in any SQLite JDBC version
+        int count = jdbcTemplate.update("update test_table set first_field = ?, second_field = ?", 2, null);
+
         assertEquals(1, count);
     }
 }
