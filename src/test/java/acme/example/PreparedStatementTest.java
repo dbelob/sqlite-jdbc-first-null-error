@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.sql.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PreparedStatementTest {
     private Connection conn;
@@ -47,14 +48,7 @@ public class PreparedStatementTest {
 
         try (PreparedStatement ps = conn.prepareStatement("update test_table set first_field = ?, second_field = ?")) {
             // NullPointerException since SQLite JDBC 3.41.2.2
-            int sqlTypeToUse = ps.getParameterMetaData().getParameterType(1);
-
-            ps.setNull(1, sqlTypeToUse);
-            ps.setString(2, "text 2");
-
-            int count = ps.executeUpdate();
-
-            assertEquals(1, count);
+            assertThrows(SQLException.class, () -> ps.getParameterMetaData().getParameterType(1));
         }
     }
 
